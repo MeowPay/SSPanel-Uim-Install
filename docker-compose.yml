@@ -1,4 +1,11 @@
 version: "3.8"
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "5"
+
 services:
 
   # 代理服务器
@@ -17,6 +24,7 @@ services:
     depends_on:
       - mysql
       - redis
+    logging: *default-logging
 
   # Mariadb
   mysql:
@@ -31,6 +39,7 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
     restart: always
+    logging: *default-logging
 
   # 创建数据库
   mysql-init:
@@ -42,6 +51,7 @@ services:
       - ./data/mysql:/var/lib/mysql
       - ./data/socket/:/var/run/mysqld/
     command: /bin/bash -c "while true;do mariadb -hmysql -uroot -pmy-secret-pw -e \"CREATE DATABASE  IF NOT EXISTS sspanel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\" && break;sleep 1;done;"
+    logging: *default-logging
 
   # PHP
   php:
@@ -56,6 +66,7 @@ services:
     depends_on:
       - mysql
       - redis
+    logging: *default-logging
 
   # Redis
   redis:
@@ -67,6 +78,7 @@ services:
     expose:
       - 6379
     restart: always
+    logging: *default-logging
 
   # 定时任务
   cron:
@@ -79,6 +91,7 @@ services:
     depends_on:
       - php
     restart: always
+    logging: *default-logging
 
   # 依赖安装
   php-compose:
@@ -88,3 +101,4 @@ services:
       - ./conf.d/:/etc/nginx/conf.d/
       - ./SSPanel-Uim/:/var/www/SSPanel-Uim/
     command: /bin/bash -c "cd /var/www/SSPanel-Uim;/usr/local/bin/composer install --ignore-platform-reqs --no-scripts --no-dev "
+    logging: *default-logging
