@@ -40,7 +40,6 @@ php xcat Tool importSetting
 php xcat Tool createAdmin
 php xcat ClientDownload
 
-chmod -R 755 SSPanel-Uim
 EOF
 
 chmod -x install.sh
