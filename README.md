@@ -1,5 +1,11 @@
 
-## 安装命令
+## 使用
+如果没有docker环境，请先安装 docker 及 compose 扩展
+``` bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+clone项目并执行安装脚本
 ```
 git clone https://github.com/Meowpay/SSPanel-Uim-Install.git sspanel
 cd sspanel 
