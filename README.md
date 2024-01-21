@@ -12,6 +12,7 @@ cd sspanel
 sh ./install.sh
 ```
 ## 文件存储
+Nginx 配置在 conf.d 目录下  
 数据全部在 data 目录下  
 SSPanel-Uim 在当前目录下
 
