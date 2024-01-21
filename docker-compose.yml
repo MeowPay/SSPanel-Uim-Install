@@ -1,0 +1,90 @@
+version: "3.8"
+services:
+
+  # 代理服务器
+  nginx:
+    build: ./dockerfile/nginx
+    # container_name: SSPanel-UimNginx
+    volumes:
+      - ./conf.d/:/etc/nginx/conf.d/
+      - ./SSPanel-Uim/:/var/www/SSPanel-Uim/
+    ports:
+      - 80:80
+      # 不需要https注释掉下行
+      - 443:443
+    restart: always
+    command: [ nginx, '-g', 'daemon off;' ]
+    depends_on:
+      - mysql
+      - redis
+
+  # Mariadb
+  mysql:
+    image: mariadb:latest
+    # container_name: SSPanel-UimMysql
+    environment:
+      # 需要的话自行更改密码，但感觉没必要，在内网并不暴露端口
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MARIADB_ROOT_PASSWORD=my-secret-pw
+    expose:
+      - 3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    restart: always
+
+  # 创建数据库
+  mysql-init:
+    image: mariadb:latest
+    # container_name: SSPanel-UimMysqlInit
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./data/socket/:/var/run/mysqld/
+    command: /bin/bash -c "while true;do mariadb -hmysql -uroot -pmy-secret-pw -e \"CREATE DATABASE  IF NOT EXISTS sspanel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\" && break;sleep 1;done;"
+
+  # PHP
+  php:
+    build: ./dockerfile/php
+    # container_name: SSPanel-UimPHP
+    volumes:
+      - ./SSPanel-Uim/:/var/www/SSPanel-Uim/
+      - ./data/socket/:/var/run/mysqld/
+    expose:
+      - 9000
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+
+  # Redis
+  redis:
+    # container_name: Redis
+    image: redis:latest
+    volumes:
+      - ./data/redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+    expose:
+      - 6379
+    restart: always
+
+  # 定时任务
+  cron:
+    build: ./dockerfile/php
+    volumes:
+      - ./crontab:/crontab
+      - ./SSPanel-Uim:/var/www/SSPanel-Uim
+      - ./data/socket/:/var/run/mysqld/
+    command: bash -c "crontab /crontab ;cron -f"
+    depends_on:
+      - php
+    restart: always
+
+  # 依赖安装
+  php-compose:
+    build: ./dockerfile/php
+    # container_name: SSPanel-UimCompose
+    volumes:
+      - ./conf.d/:/etc/nginx/conf.d/
+      - ./SSPanel-Uim/:/var/www/SSPanel-Uim/
+    command: /bin/bash -c "cd /var/www/SSPanel-Uim;/usr/local/bin/composer install --ignore-platform-reqs --no-scripts --no-dev "

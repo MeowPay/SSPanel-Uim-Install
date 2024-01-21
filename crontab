@@ -1,0 +1,2 @@
+*/5 * * * * /usr/local/bin/php /var/www/SSPanel-Uim/xcat Cron
+
