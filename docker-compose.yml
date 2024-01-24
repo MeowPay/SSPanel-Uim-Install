@@ -1,11 +1,19 @@
 version: "3.8"
 
+# 默认日志配置
 x-logging: &default-logging
   driver: "json-file"
   options:
     max-size: "10m"
     max-file: "5"
 
+# PHP环境
+x-php: &default-php
+  build: ./dockerfile/php
+  #不想编译的可以直接使用镜像
+  # image: ghcr.io/meowpay/sspanel:v2024_01_24
+
+# 服务
 services:
 
   # 代理服务器
@@ -32,7 +40,6 @@ services:
     # container_name: SSPanel-UimMysql
     environment:
       # 需要的话自行更改密码，但感觉没必要，在内网并不暴露端口
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
       - MARIADB_ROOT_PASSWORD=my-secret-pw
       - MARIADB_DATABASE=sspanel
     expose:
@@ -44,9 +51,7 @@ services:
 
   # PHP
   php:
-    build: ./dockerfile/php
-    #不想编译的可以直接使用镜像
-    # image: ghcr.io/meowpay/sspanel:v2024_01_24
+    <<: *default-php
     # container_name: SSPanel-UimPHP
     volumes:
       - ./SSPanel-Uim/:/var/www/SSPanel-Uim/
@@ -73,9 +78,7 @@ services:
 
   # 定时任务
   cron:
-    build: ./dockerfile/php
-    #不想编译的可以直接使用镜像
-    # image: ghcr.io/meowpay/sspanel:v2024_01_24
+    <<: *default-php
     volumes:
       - ./crontab:/crontab
       - ./SSPanel-Uim:/var/www/SSPanel-Uim
@@ -88,9 +91,7 @@ services:
 
   # 依赖安装
   php-compose:
-    build: ./dockerfile/php
-    #不想编译的可以直接使用镜像
-    # image: ghcr.io/meowpay/sspanel:v2024_01_24
+    <<: *default-php
     # container_name: SSPanel-UimCompose
     volumes:
       - ./conf.d/:/etc/nginx/conf.d/

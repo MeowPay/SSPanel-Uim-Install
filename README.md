@@ -33,3 +33,4 @@ rsync -avz `pwd`/ <remote>/
 ```
 
 ### 个人测试使用，用于生产环境时请确保掌握相关技能 
+### 有疑问及反馈欢迎联系 [https://t.me/MeowPayCN](https://t.me/MeowPayCN)
