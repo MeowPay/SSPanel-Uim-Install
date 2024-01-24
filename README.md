@@ -11,6 +11,21 @@ git clone https://github.com/Meowpay/SSPanel-Uim-Install.git sspanel
 cd sspanel 
 sh ./install.sh
 ```
+## 注意事项
+SSpanel似乎必须要TLS才可以运行，否则cookie无效  
+解决办法：  
+覆盖conf.d/TLS 里的内容到 conf.d/
+```
+mv conf.d/TLS/* conf.d/
+```
+修改域名及证书路径
+```
+vim conf.d/sspanel.conf
+```
+重启Nginx
+```
+docker compose restart nginx
+```
 ## 文件存储
 Nginx 配置在 conf.d 目录下  
 数据全部在 data 目录下  
