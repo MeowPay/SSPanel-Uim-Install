@@ -9,7 +9,7 @@ cd -
 chmod +x *.sh
 chmod -R 777 SSPanel-Uim
 # 启动
-docker-compose up -d
+docker compose up -d
 # 复制配置文件
 cp SSPanel-Uim/config/.config.example.php SSPanel-Uim/config/.config.php
 cp SSPanel-Uim/config/appprofile.example.php SSPanel-Uim/config/appprofile.php
