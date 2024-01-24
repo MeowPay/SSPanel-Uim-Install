@@ -34,23 +34,12 @@ services:
       # 需要的话自行更改密码，但感觉没必要，在内网并不暴露端口
       - MYSQL_ROOT_PASSWORD=my-secret-pw
       - MARIADB_ROOT_PASSWORD=my-secret-pw
+      - MARIADB_DATABASE=sspanel
     expose:
       - 3306
     volumes:
       - ./data/mysql:/var/lib/mysql
     restart: always
-    logging: *default-logging
-
-  # 创建数据库
-  mysql-init:
-    image: mariadb:latest
-    # container_name: SSPanel-UimMysqlInit
-    environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-    volumes:
-      - ./data/mysql:/var/lib/mysql
-      - ./data/socket/:/var/run/mysqld/
-    command: /bin/bash -c "while true;do mariadb -hmysql -uroot -pmy-secret-pw -e \"CREATE DATABASE  IF NOT EXISTS sspanel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\" && break;sleep 1;done;"
     logging: *default-logging
 
   # PHP
