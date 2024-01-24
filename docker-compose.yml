@@ -11,7 +11,7 @@ x-logging: &default-logging
 x-php: &default-php
   build: ./dockerfile/php
   #不想编译的可以直接使用镜像
-  # image: ghcr.io/meowpay/sspanel:v2024_01_24
+  # image: ghcr.io/meowpay/sspanel:v2024_01_25
 
 # 服务
 services:
