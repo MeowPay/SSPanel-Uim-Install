@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - "master"
+    tags: [ 'v*' ]
 jobs:
   docker:
     runs-on: ubuntu-latest

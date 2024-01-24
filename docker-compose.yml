@@ -57,7 +57,7 @@ services:
   php:
     build: ./dockerfile/php
     #不想编译的可以直接使用镜像
-    # image: ghcr.io/meowpay/sspanel:latest
+    # image: ghcr.io/meowpay/sspanel:v2024_01_24
     # container_name: SSPanel-UimPHP
     volumes:
       - ./SSPanel-Uim/:/var/www/SSPanel-Uim/
@@ -86,7 +86,7 @@ services:
   cron:
     build: ./dockerfile/php
     #不想编译的可以直接使用镜像
-    # image: ghcr.io/meowpay/sspanel:latest
+    # image: ghcr.io/meowpay/sspanel:v2024_01_24
     volumes:
       - ./crontab:/crontab
       - ./SSPanel-Uim:/var/www/SSPanel-Uim
@@ -101,7 +101,7 @@ services:
   php-compose:
     build: ./dockerfile/php
     #不想编译的可以直接使用镜像
-    # image: ghcr.io/meowpay/sspanel:latest
+    # image: ghcr.io/meowpay/sspanel:v2024_01_24
     # container_name: SSPanel-UimCompose
     volumes:
       - ./conf.d/:/etc/nginx/conf.d/
